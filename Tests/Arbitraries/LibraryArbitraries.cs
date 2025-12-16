@@ -14,35 +14,45 @@ namespace Library_Book_Borrowing_System.Tests.Arbitraries
 
         public static Arbitrary<string> Isbn()
         {
-            throw new NotImplementedException();
+            return Gen.Choose(1, 999)
+                     .Select(x => $"Isbn-{x}")
+                     .ToArbitrary();
         }
 
 
         private static Gen<string> Title()
         {
-            throw new NotImplementedException();
-
+            return Gen.Elements("Clean Code", "The Pragmatic Programmer", "C# in Depth", "Design Patterns: Elements of Reusable Object-Oriented Software");
         }
 
 
         public static Arbitrary<Book> Book()
         {
-            throw new NotImplementedException();
+            var bookGen = from isbn in Isbn().Generator
+                from title in Title()
+                from copies in Gen.Choose(1, 20)
+                select new Book(isbn, title, copies);
 
+            return Arb.From(bookGen);
         }
 
 
         public static Arbitrary<User> User()
         {
-            throw new NotImplementedException();
-
+            var userGen = from name in Gen.Elements("Alice", "Bob", "Charlie", "Dave")
+                select new User(name);
+            
+            return Arb.From(userGen);
         }
 
 
         public static Arbitrary<LibraryOperation> Operation()
         {
-            throw new NotImplementedException();
-
+            var opGen = from type in Gen.Elements(OperationType.Borrow, OperationType.Return)
+                from isbn in Isbn().Generator
+                select new LibraryOperation(type, isbn);
+            
+            return Arb.From(opGen);
         }
 
 

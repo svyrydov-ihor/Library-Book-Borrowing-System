@@ -11,7 +11,19 @@ namespace Library_Book_Borrowing_System.Tests.Properties
 {
     public class UserProperties
     {
+        // Новий користувач не має позичених книг
+        [Property(Arbitrary = new[] {typeof(LibraryArbitraries)})]
+        public void NewUser_HasNoBorrowedBooks(User user)
+        {
+            Assert.Empty(user.BorrowedIsbns);
+        }
 
+        // Користувач має унікальний ID
+        [Property(Arbitrary = new[] {typeof(LibraryArbitraries)})]
+        public void User_AlwaysHasId(User user)
+        {
+            Assert.NotEqual(Guid.Empty, user.Id);
+        }
     }
 
 }
